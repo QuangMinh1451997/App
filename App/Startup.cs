@@ -28,6 +28,11 @@ namespace App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            });
             // Add Db context
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
@@ -43,7 +48,7 @@ namespace App
             {
                 app.UseHsts();
             }
-
+            app.UseCors("AllowAllOrigins");
             app.UseHttpsRedirection();
             app.UseMvc();
         }
